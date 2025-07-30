@@ -8,6 +8,7 @@ import { useState } from "react";
 interface GoogleSignInBtnProps {
 	providerId?: string;
 	callbackUrl?: string;
+	title?: string;
 }
 
 const GoogleSignInBtn: React.FC<GoogleSignInBtnProps> = ({
@@ -30,7 +31,7 @@ const GoogleSignInBtn: React.FC<GoogleSignInBtnProps> = ({
 	return (
 		<Button
 			variant={"tertiary"}
-			className="text-base sm:text-lg lg:text-xl h-12 sm:h-14 lg:h-16 flex gap-3 sm:gap-4 items-center justify-center w-full transition-all duration-200"
+			className="text-base sm:text-lg lg:text-xl h-10 sm:h-12 lg:h-14 flex gap-3 sm:gap-4 items-center justify-center w-full transition-all duration-200"
 			disabled={isLoading}
 			aria-label="Sign in with Google"
 			type="button"
@@ -39,7 +40,7 @@ const GoogleSignInBtn: React.FC<GoogleSignInBtnProps> = ({
 			{isLoading ? (
 				<div className="flex items-center gap-2">
 					<div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-					<span>Amplifying...</span>
+					<span>Packing...</span>
 				</div>
 			) : (
 				<>
@@ -51,7 +52,7 @@ const GoogleSignInBtn: React.FC<GoogleSignInBtnProps> = ({
 						priority
 						className="w-5 h-5 sm:w-6 sm:h-6"
 					/>
-					<span className="font-medium">Pack Up with Google</span>
+					<span className="font-medium">Pack up with Google</span>
 				</>
 			)}
 		</Button>

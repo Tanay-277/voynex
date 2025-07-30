@@ -1,137 +1,200 @@
+"use client";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-	ArrowLeft,
-	Globe,
-	Lightbulb,
-	MapPin,
-	Users,
-} from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
 import GoogleSignInBtn from "@/components/blocks/GoogleSignInBtn";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import Video from "@/components/ui/video";
 
-const page = async () => {
+const loginSchema = z.object({
+	email: z.email({ error: "Enter a valid email address" }),
+	password: z
+		.string()
+		.min(6, { error: "Password must be at least 6 characters long" }),
+});
+
+const page = () => {
+	const form = useForm<z.infer<typeof loginSchema>>({
+		resolver: zodResolver(loginSchema),
+		defaultValues: {
+			email: "",
+			password: "",
+		},
+	});
+
+	function onSubmit(values: z.infer<typeof loginSchema>) {
+		console.log(values);
+		// Handle login logic here
+	}
+
 	return (
-		<main className="w-full p-6 md:p-12 max-h-dvh">
-			<nav className="w-full flex items-center justify-between">
+		<main className="min-h-screen w-full">
+			<nav className="w-full flex items-center justify-between p-6 md:px-12 md:py-8">
 				<Link href={"/"}>
-					<Button size={"lg"} variant={"tertiary"}>
-						<ArrowLeft /> back
+					<Button
+						size={"lg"}
+						variant={"tertiary"}
+						className="gap-2 hover:bg-background/80"
+					>
+						<ArrowLeft className="w-4 h-4" />
+						<span className="hidden sm:inline">back</span>
 					</Button>
 				</Link>
-				<Link href="/" className="font-bold text-2xl tracking-tight">
+				<Link
+					href="/"
+					className="font-medium text-2xl md:text-3xl tracking-tight font-serif"
+				>
 					voynex<span className="text-primary">.</span>
 				</Link>
 			</nav>
-			<div className="container mx-auto flex flex-col justify-between md:flex-row mt-8 md:bg-background/50 md:p-6 rounded-2xl md:grainy md:border dark:border-input border-foreground/10">
-				{/* Left Section */}
-				<div className="left flex flex-col justify-between w-full md:w-1/2">
-					<div className="top">
-						<h2 className="dark:text-muted-foreground text-foreground text-3xl font-semibold tracking-tight">
-							Explore with Voynex
-						</h2>
-						<p className="text-muted-foreground mt-3 max-w-md ml-1 leading-relaxed">
-							Experience seamless{" "}
-							<span className="text-primary font-medium">AI-powered travel</span>{" "}
-							assistance. Plan smarter trips, navigate unfamiliar places, and get
-							real-time insights that{" "}
-							<span className="italic">enhance every moment</span> of your journey.
-						</p>
-						<div className="flex flex-row">
-							<Card className="shadow-none mt-6 mb-8 w-full max-w-lg dark:bg-background/5 bg-background/40 border dark:border-input border-foreground/10">
-								<CardHeader className="pb-2">
-									<CardTitle className="text-xl">App Features</CardTitle>
-									<CardDescription>Discover what makes Voynex unique</CardDescription>
-								</CardHeader>
-								<CardContent>
-									<div className="grid grid-cols-2 max-sm:grid-cols-1 gap-4 text-sm">
-										<div className="flex items-center gap-2">
-											<div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-												<Globe className="h-4 w-4 text-primary" />
-											</div>
-											<span>Smart Trip Planning</span>
-										</div>
-										<div className="flex items-center gap-2">
-											<div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-												<Users className="h-4 w-4 text-primary" />
-											</div>
-											<span>Community Recommendations</span>
-										</div>
-										<div className="flex items-center gap-2">
-											<div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-												<Lightbulb className="h-4 w-4 text-primary" />
-											</div>
-											<span>AI-Powered Insights</span>
-										</div>
-										<div className="flex items-center gap-2">
-											<div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-												<MapPin className="h-4 w-4 text-primary" />
-											</div>
-											<span>Real-Time Navigation</span>
-										</div>
-									</div>
-								</CardContent>
-							</Card>
-						</div>
-						<Button
-							size={"lg"}
-							variant={"link"}
-							className="rounded-lg cursor-default underline underline-offset-4"
-						>
-							Where words fail, World speaks!
-						</Button>
-					</div>
-					<div className="bottom flex gap-4 flex-col w-[85%]">
-						<GoogleSignInBtn />
-						<p className="text-muted-foreground text-sm text-center">
-							By signing in, you agree to our Terms of Service and Privacy
-							Policy.
-						</p>
-					</div>
-				</div>
 
-				<div className="right hidden md:flex flex-1 justify-end">
-					<div className="flex gap-4 md:gap-6">
-						{/* <div className="flex flex-col gap-4 md:gap-6 h-[33%]">
-							<div className="overflow-hidden rounded-xl flex items-center justify-center">
-								<img
-									src="/assets/landscape.jpg"
-									alt="Disc artwork"
-									// width={320}
-									// height={320}
-									className="w-full h-auto object-cover transition-transform hover:scale-105 duration-300"
-								/>
+			<div className="container mx-auto px-6 md:px-12 pb-12">
+				<div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[calc(100vh-120px)]">
+					<div className="flex flex-col justify-center space-y-6 max-w-lg mx-auto lg:mx-0">
+						<div className="space-y-4">
+							{/* <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+								Welcome Back
+							</h1> */}
+							<h2 className="text-xl md:text-3xl text-muted-foreground font-semibold">
+								Explore with Voynex
+							</h2>
+							<p className="text-muted-foreground leading-relaxed">
+								Experience seamless{" "}
+								<span className="text-primary font-medium">
+									AI-powered travel
+								</span>{" "}
+								assistance. Plan smarter trips, navigate unfamiliar places, and
+								get real-time insights that{" "}
+								<span className="italic font-medium">enhance every moment</span>{" "}
+								of your journey.
+							</p>
+						</div>
+
+						<div className="space-y-6">
+							<Form {...form}>
+								<form
+									onSubmit={form.handleSubmit(onSubmit)}
+									className="space-y-6"
+								>
+									<FormField
+										control={form.control}
+										name="email"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="text-base font-medium ml-0.5">
+													Email Address
+												</FormLabel>
+												<FormControl>
+													<Input
+														placeholder="Enter your email"
+														type="email"
+														className="h-12 text-base !rounded-full"
+														{...field}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="password"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="text-base font-medium ml-0.5">
+													Password
+												</FormLabel>
+												<FormControl>
+													<Input
+														placeholder="Enter your password"
+														type="password"
+														className="h-12 text-base !rounded-full"
+														{...field}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+
+									<Button
+										type="submit"
+										size="lg"
+										className="w-full h-12 text-base font-medium"
+									>
+										Sign In
+									</Button>
+								</form>
+							</Form>
+							<p className="text-xs text-muted-foreground text-center leading-relaxed">
+								By signing in, you agree to our{" "}
+								<Link href="/terms" className="text-primary hover:underline">
+									Terms of Service
+								</Link>{" "}
+								and{" "}
+								<Link href="/privacy" className="text-primary hover:underline">
+									Privacy Policy
+								</Link>
+								.
+							</p>
+
+							{/* Divider */}
+							<div className="relative">
+								<div className="absolute inset-0 flex items-center">
+									<span className="w-full border-t border-border" />
+								</div>
+								<div className="relative flex justify-center text-xs uppercase">
+									<span className="bg-transparent px-4 text-muted-foreground font-medium">
+										Or
+									</span>
+								</div>
 							</div>
-							<div className="overflow-hidden rounded-xl flex items-center justify-center">
-								<img
-									src="/assets/plane.jpg"
-									alt="Disc artwork"
-									// width={300}
-									// height={400}
-									className="w-full h-auto object-cover transition-transform hover:scale-105 duration-300"
-								/>
+							<GoogleSignInBtn />
+						</div>
+
+						{/* Footer */}
+						<div className="space-y-4">
+							<div className="text-center">
+								<Link
+									href="/forgot-password"
+									className="text-sm text-primary hover:underline"
+								>
+									Forgot your password?
+								</Link>
 							</div>
-							<Button
-								size={"lg"}
-								variant={"link"}
-								className="rounded-lg cursor-default underline underline-offset-4"
-							>
-								Where words fail, Music speaks!
-							</Button>
-						</div> */}
-						<div className="overflow-hidden rounded-xl relative flex items-center justify-center h-[74vh] w-[42vw]">
-							<img
-								src="/assets/road.jpg"
-								alt="Surround artwork"
-								// width={300}
-								// height={450}
-								className=" w-full h-full object-cover transition-transform hover:scale-105 duration-300"
+
+							<div className="text-center">
+								<p className="text-sm text-muted-foreground">
+									Don't have an account?{" "}
+									<Link
+										href="/signup"
+										className="text-primary font-medium hover:underline"
+									>
+										Sign up
+									</Link>
+								</p>
+							</div>
+						</div>
+					</div>
+					<div className="flex w-full items-center justify-center">
+						<div className="rounded-full">
+							<Video
+								src={"/assets/videos/plane-sd.mp4"}
+								className="rounded-full scale-50"
+								autoPlay
+								loop
+								muted
 							/>
 						</div>
 					</div>
